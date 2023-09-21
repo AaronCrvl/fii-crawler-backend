@@ -51,9 +51,25 @@
               "target": "Package",
               "version": "[1.0.4, )"
             },
+            "FluentScheduler": {
+              "target": "Package",
+              "version": "[5.5.1, )"
+            },
             "PuppeteerSharp": {
               "target": "Package",
               "version": "[11.0.6, )"
+            },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
+            "Quartz.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
+            "Quartz.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.7.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
