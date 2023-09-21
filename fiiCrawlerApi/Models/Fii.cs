@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace fiiCrawlerApi.Models
 {
-    public class Fii
+    public class FII
     {
-        public string fii;
+        public string nome;
         public string ultimoRedimentoRS;
         public string ultimosRedimento;
         public string dataPagamento;

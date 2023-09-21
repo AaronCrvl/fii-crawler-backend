@@ -31,7 +31,7 @@ namespace fiiCrawlerApi.Controllers
                 var crawler = new fiiCrawlerApi.WebScraper.Crawler();
                 var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
 
-                List<Fii> dados = new List<Fii>();                
+                List<FII> dados = new List<FII>();                
                 dados = cache.RetornarDadosDeCache().Result;                                                   
                 
                 HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;

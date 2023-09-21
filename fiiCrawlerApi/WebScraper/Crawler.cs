@@ -11,29 +11,42 @@ namespace fiiCrawlerApi.WebScraper
     /// </summary>
     public class Crawler
     {
-        public async Task<List<Fii>> GetListaResumoFii()
+        #region Variáveis Privadas
+        private enum TipoDeDado
+        {
+            paginaResumo,
+            paginaFII,
+        }
+
+        private IBrowser browser;
+        #endregion
+
+        #region Métodos
+        public async Task<FIIDetalhado> GetInformacaoFII(string fii)
         {
             try
             {
                 using var browserFetcher = new BrowserFetcher();
 
                 /*
-                 * Caminho do browser que vai ser utilizado e configuração headless
+                 * Caminho do browser que vai ser utilizado e configuração headless.
+                 * 
                  * Headless browser são navegadores sem interface
                  * que fornecem o controle das páginas da web 
                  * mas são executados através de uma aplicação externa
                 */
-                var browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                
+                browser = await Puppeteer.LaunchAsync(new LaunchOptions
                 {
                     Headless = true,
                     ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
                 });
-                
+
                 // Acesso a página base
                 var pagina = await browser.NewPageAsync();
-                await pagina.GoToAsync(@"https://fiis.com.br/resumo/", 0); // Web Crawler retorna o conjunto de dados na página
-
-                return TratarDadosRecebidos(pagina).Result;
+                await pagina.GoToAsync($"https://fiis.com.br/resumo/{fii}", 0); // Web Crawler retorna o conjunto de dados na página
+                
+                return TratarDadosFII(pagina).Result;
             }
             catch (System.Exception ex)
             {
@@ -41,10 +54,97 @@ namespace fiiCrawlerApi.WebScraper
             }
         }
 
-        private async Task<List<Fii>> TratarDadosRecebidos(IPage page)
+        private async Task<FIIDetalhado> TratarDadosFII(IPage page)
         {
             try
-            {           
+            {
+                string jsSeletorNomeFII =
+                    @"document.getElementsByClassName('headerTicker__content')[0]?"
+                    + @".getElementsByClassName('headerTicker__content__name')[0]?"
+                    + @".getElementsByTagName('p')[0]?"
+                    + @".innerText;";
+
+                var nomeFii = await page.EvaluateExpressionAsync<string>(jsSeletorNomeFII);
+
+                string jsSeletorCotacao =
+                    @"document.getElementsByClassName('quotations-details')[0]?"
+                    + @".getElementsByClassName('item quotation')[0]?"
+                    + @".getElementsByTagName('div')[0]?"
+                    + @".getElementsByClassName('value')[0]?"
+                    + @".innerText";
+                var cotacao = await page.EvaluateExpressionAsync<string>(jsSeletorCotacao);
+
+                string jsSeletorVariacao =
+                    @"document.getElementsByClassName('quotations-details')[0]?"
+                    + @".getElementsByClassName('item quotation')[0]"
+                    + @".getElementsByTagName('div')[0]?"
+                    + @".getElementsByClassName('change')[0]?"
+                    + @".getElementsByTagName('span')[0]?"
+                    + @".innerText";                                                                        
+                var variacao = await page.EvaluateExpressionAsync<string>(jsSeletorVariacao);
+
+                string jsSeletorSinalVariacao =                    
+                    @"document.getElementsByClassName('quotations-details')[0]?"
+                    + @".getElementsByClassName('item quotation')[0]"
+                    + @".getElementsByTagName('div')[0]?"
+                    + @".getElementsByClassName('change')[0]?"
+                    + @".getElementsByTagName('span')[0]?"
+                    + @".getAttribute('class')";
+                var sinalVariacao = await page.EvaluateExpressionAsync<string>(jsSeletorSinalVariacao);
+
+                var fii = new FIIDetalhado();
+                fii.nomeCompleto = nomeFii;
+                fii.cotacaoAtual = cotacao;
+                fii.variacao = sinalVariacao.ToLower() == "down" ? $"- {variacao}" : $"+ {variacao}";
+
+                // fechar o browser toda vez que finalizar
+                // o processo de scraping & crawling                                      
+                await page.CloseAsync();
+                await browser.CloseAsync();
+
+                return fii;
+            }
+            catch (System.Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<List<FII>> GetListaResumoFii()
+        {
+            try
+            {
+                using var browserFetcher = new BrowserFetcher();
+
+                /*
+                 * Caminho do browser que vai ser utilizado e configuração headless.
+                 * 
+                 * Headless browser são navegadores sem interface
+                 * que fornecem o controle das páginas da web 
+                 * mas são executados através de uma aplicação externa
+                */
+                browser = await Puppeteer.LaunchAsync(new LaunchOptions
+                {
+                    Headless = true,
+                    ExecutablePath = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"
+                });
+
+                // Acesso a página base
+                var pagina = await browser.NewPageAsync();
+                await pagina.GoToAsync(@"https://fiis.com.br/resumo/", 0); // Web Crawler retorna o conjunto de dados na página
+
+                return TratarDadosListaFii(pagina).Result;                
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        private async Task<List<FII>> TratarDadosListaFii(IPage page)
+        {
+            try
+            {
                 /*
                  * Neste ponto temos o início do scraping da página.
                  * 
@@ -72,7 +172,7 @@ namespace fiiCrawlerApi.WebScraper
 
                 string jsSelecionarTodosOsUltimosRendimentos = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[2]?.innerText);";
                 var ultimosRendimentos = await page.EvaluateExpressionAsync<string[]>(jsSelecionarTodosOsUltimosRendimentos);
-                
+
                 string jsSelecionarTodosAsDatasDePagamento = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[3]?.innerText);";
                 var datasDePagamento = await page.EvaluateExpressionAsync<string[]>(jsSelecionarTodosAsDatasDePagamento);
 
@@ -89,30 +189,31 @@ namespace fiiCrawlerApi.WebScraper
                 var cotas = await page.EvaluateExpressionAsync<string[]>(jsSelecionarTodasAsCotas);
 
                 // Criando novos objetos DTO com base nos dados recebidos.
-                List<Fii> fiis = new List<Fii>();
+                List<FII> fiis = new List<FII>();
                 if (nomesFii.Length > 0)
                 {
                     // a primeira linha é o nome das colunas da tabela,
                     // como este dado não será utilizado o mesmo pode ser ignorado
                     for (int i = 1; i < ultimosRendimentos.Length; ++i)
                         fiis.Add(
-                            new Fii { 
-                                fii = nomesFii[i],
+                            new FII
+                            {
+                                nome = nomesFii[i],
                                 ultimoRedimentoRS = ultimosRendimentosRs[i],
-                                ultimosRedimento = ultimosRendimentos[i], 
+                                ultimosRedimento = ultimosRendimentos[i],
                                 dataPagamento = datasDePagamento[i],
                                 dataBase = datasBase[i],
                                 rendimentoMedioAnual = rendimentoMedioAnual[i],
                                 patrimonio = patrimonios[i],
-                                cota = cotas[i] 
+                                cota = cotas[i]
                             }
                         );
                 }
 
                 // fechar o browser toda vez que finalizar
-                // o processo de scraping & crawling                                      
-                await page.Browser.CloseAsync();                
-
+                // o processo de scraping & crawling
+                await page.CloseAsync();                
+                await browser.CloseAsync();
                 return fiis;
             }
             catch (System.Exception e)
@@ -120,5 +221,6 @@ namespace fiiCrawlerApi.WebScraper
                 throw e;
             }
         }
+        #endregion        
     }
 }

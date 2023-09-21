@@ -55,7 +55,7 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
-        public void SalvarCache(List<Fii> list)
+        public void SalvarCache(List<FII> list)
         {
             try
             {
@@ -68,12 +68,12 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
-        public async Task<List<Fii>> RetornarDadosDeCache()
+        public async Task<List<FII>> RetornarDadosDeCache()
         {
             try
             {
                 var cache = System.IO.File.ReadAllText(this.path);
-                var lista = JsonConvert.DeserializeObject<List<Fii>>(cache);
+                var lista = JsonConvert.DeserializeObject<List<FII>>(cache);
                 return lista;
             }
             catch (Exception e)
