@@ -1,0 +1,187 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\TestManagement\\TestManagement.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\fiiCrawlerApi\\fiiCrawlerApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\fiiCrawlerApi\\fiiCrawlerApi.csproj",
+        "projectName": "fiiCrawlerApi",
+        "projectPath": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\fiiCrawlerApi\\fiiCrawlerApi.csproj",
+        "packagesPath": "C:\\Users\\aaron\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\fiiCrawlerApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\aaron\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://tfs.wgcsistemas.com.br/tfs/Projetos%20-%20WGC/_packaging/Nuget.WGC/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "AngleSharp": {
+              "target": "Package",
+              "version": "[1.0.4, )"
+            },
+            "FluentScheduler": {
+              "target": "Package",
+              "version": "[5.5.1, )"
+            },
+            "PuppeteerSharp": {
+              "target": "Package",
+              "version": "[11.0.6, )"
+            },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
+            "Quartz.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
+            "Quartz.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.7.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\TestManagement\\TestManagement.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\TestManagement\\TestManagement.csproj",
+        "projectName": "TestManagement",
+        "projectPath": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\TestManagement\\TestManagement.csproj",
+        "packagesPath": "C:\\Users\\aaron\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\TestManagement\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\DevExpress 22.1\\Components\\Offline Packages",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\aaron\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\DevExpress 22.1.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\DevExpress 22.1\\Components\\System\\Components\\Packages": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://tfs.wgcsistemas.com.br/tfs/Projetos%20-%20WGC/_packaging/Nuget.WGC/nuget/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\fiiCrawlerApi\\fiiCrawlerApi.csproj": {
+                "projectPath": "C:\\Users\\aaron\\source\\repos\\fiiCrawler_Backend\\fiiCrawlerApi\\fiiCrawlerApi.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.7.2, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.13.3, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.416\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
