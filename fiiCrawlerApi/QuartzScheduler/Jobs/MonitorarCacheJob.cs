@@ -15,18 +15,18 @@ namespace fiiCrawlerApi.QuartzScheduler.Jobs
         {
             var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
             if (
-                    cache.ExisteCache()
-                    && DateTime.Now.Year == cache.ultimaModificacao.Year
-                    && DateTime.Now.Month == cache.ultimaModificacao.Month
-                    && DateTime.Now.Day == cache.ultimaModificacao.Day                    
-                    && DateTime.Now.Hour == cache.ultimaModificacao.Hour
-                    && (DateTime.Now.Minute - cache.ultimaModificacao.Minute) <= 30 // atualizar a cada 30 minutos
+                    cache.ExisteCacheLista()
+                    && DateTime.Now.Year == cache.ultimaModificacaoLista.Year
+                    && DateTime.Now.Month == cache.ultimaModificacaoLista.Month
+                    && DateTime.Now.Day == cache.ultimaModificacaoLista.Day                    
+                    && DateTime.Now.Hour == cache.ultimaModificacaoLista.Hour
+                    && (DateTime.Now.Minute - cache.ultimaModificacaoLista.Minute) <= 30 // atualizar a cada 30 minutos
                 )
                 await Task.FromResult(true);
             else
             {
-                cache.LimparCache();
-                cache.SalvarCache(new fiiCrawlerApi.WebScraper.Crawler().GetListaResumoFii().Result);
+                cache.LimparCacheLista();
+                cache.SalvarCacheLista(new fiiCrawlerApi.WebScraper.Crawler().ScrapeListaResumoFii().Result);
             }
 
             await Task.FromResult(true);
