@@ -19,8 +19,8 @@ namespace ApiTests.TestCases.UnitTests
             };
         private string pathParaAmbienteDeTeste = @"C:\Users\aaron\source\repos\fiiCrawler_Backend\fiiCrawlerApi\Cache\CacheFiles";
         private string pathListaFii = Path.Combine(Environment.CurrentDirectory, @"StaticData\ListaFII.json");
-        private List<fiiCrawlerApi.Models.FII> listaFiiTeste = null;        
-        #endregion        
+        private List<fiiCrawlerApi.Models.FII> listaFiiTeste = null;
+        #endregion
 
         #region Setup
         [SetUp]
@@ -28,8 +28,8 @@ namespace ApiTests.TestCases.UnitTests
         {
             try
             {
-                listaFiiTeste = JsonConvert.DeserializeObject<List<fiiCrawlerApi.Models.FII>> (
-                    File.ReadAllText (
+                listaFiiTeste = JsonConvert.DeserializeObject<List<fiiCrawlerApi.Models.FII>>(
+                    File.ReadAllText(
                         // ajuste para casos de teste
                         this.pathListaFii.Contains("\\bin\\Debug\\net5.0") ?
                         $@"{this.pathParaAmbienteDeTeste}\\FIIDetailCache.json" : this.pathListaFii
@@ -92,20 +92,89 @@ namespace ApiTests.TestCases.UnitTests
             }
         }
 
+        [Test]
         public void RetornaDadosDetalhametoFii()
         {
             try
             {
                 var gerenciador = new fiiCrawlerApi.Cache.GerenciadorDeCache();
-                if (gerenciador.ExisteNoCacheDeDetalhamento(fiiDetalhamentoTeste.codigoFii))
+
+                #region Casos de Teste
+                string fii1 = "tepp11";
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fii1))
                 {
                     var fundo = gerenciador.RetornarDadosDeCacheDetalhamento(fiiDetalhamentoTeste.codigoFii).Result;
                     Console.WriteLine($"Fundo Detalhado!");
                     Console.WriteLine($"Código: {fundo.codigoFii}");
                     Console.WriteLine($"Nome Completo: {fundo.nomeCompleto}");
                     Console.WriteLine($"Cota: {fundo.cota}");
+                    Console.WriteLine($"Valorização: {fundo.valorizacao}");
+                }
+                else
+                {
+                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii1).Result;
+                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                        gerenciador.SalvarCacheDetalhamento(fundo);
+
+                    Console.WriteLine($"Fundo Detalhado!");
                     Console.WriteLine($"Código: {fundo.codigoFii}");
-                }                                
+                    Console.WriteLine($"Nome Completo: {fundo.nomeCompleto}");
+                    Console.WriteLine($"Cota: {fundo.cota}");
+                    Console.WriteLine($"Valorização: {fundo.valorizacao}");
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+
+                string fii2 = "hgff11";
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fii2))
+                {
+                    var fundo = gerenciador.RetornarDadosDeCacheDetalhamento(fii2).Result;
+                    Console.WriteLine($"Fundo Detalhado!");
+                    Console.WriteLine($"Código: {fundo.codigoFii}");
+                    Console.WriteLine($"Nome Completo: {fundo.nomeCompleto}");
+                    Console.WriteLine($"Cota: {fundo.cota}");
+                    Console.WriteLine($"Valorização: {fundo.valorizacao}");
+                }
+                else
+                {
+                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii2).Result;
+                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                        gerenciador.SalvarCacheDetalhamento(fundo);
+
+                    Console.WriteLine($"Fundo Detalhado!");
+                    Console.WriteLine($"Código: {fundo.codigoFii}");
+                    Console.WriteLine($"Nome Completo: {fundo.nomeCompleto}");
+                    Console.WriteLine($"Cota: {fundo.cota}");
+                    Console.WriteLine($"Valorização: {fundo.valorizacao}");
+                }
+
+                Console.WriteLine();
+                Console.WriteLine();
+
+                string fii3 = "bcff11";
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fii3))
+                {
+                    var fundo = gerenciador.RetornarDadosDeCacheDetalhamento(fii3).Result;
+                    Console.WriteLine($"Fundo Detalhado!");
+                    Console.WriteLine($"Código: {fundo.codigoFii}");
+                    Console.WriteLine($"Nome Completo: {fundo.nomeCompleto}");
+                    Console.WriteLine($"Cota: {fundo.cota}");
+                    Console.WriteLine($"Valorização: {fundo.valorizacao}");
+                }
+                else
+                {
+                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii3).Result;
+                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                        gerenciador.SalvarCacheDetalhamento(fundo);
+
+                    Console.WriteLine($"Fundo Detalhado!");
+                    Console.WriteLine($"Código: {fundo.codigoFii}");
+                    Console.WriteLine($"Nome Completo: {fundo.nomeCompleto}");
+                    Console.WriteLine($"Cota: {fundo.cota}");
+                    Console.WriteLine($"Valorização: {fundo.valorizacao}");
+                }
+                #endregion                
             }
             catch (Exception e)
             {

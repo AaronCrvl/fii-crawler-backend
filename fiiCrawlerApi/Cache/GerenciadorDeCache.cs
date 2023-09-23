@@ -7,38 +7,49 @@ using System.Threading.Tasks;
 
 namespace fiiCrawlerApi.Cache
 {
+    /// <summary>
+    /// Classe responsável por gerenciar o cache
+    /// da aplicação.    
+    /// </summary>
     public class GerenciadorDeCache
     {
         #region Variáveis Privadas 
-        private string _caminhoListaFii = Path.Combine(Environment.CurrentDirectory, @"Cache\CacheFiles\FIICacheList.json");
-        private DateTime _ultimaModificacaoLista = File.GetLastWriteTime(Path.Combine(Environment.CurrentDirectory, @"Cache\CacheFiles\FIICacheList.json"));
-        private string _caminhoDetalhamentoFii = Path.Combine(Environment.CurrentDirectory, @"Cache\CacheFiles\FIIDetailCache.json");
-        private DateTime _ultimaModificacaoDetalhamento = File.GetLastWriteTime(Path.Combine(Environment.CurrentDirectory, @"Cache\CacheFiles\FIIDetailCache.json"));
-        private string pathParaAmbienteDeTeste = @"C:\Users\aaron\source\repos\fiiCrawler_Backend\fiiCrawlerApi\Cache\CacheFiles";
+        private string _caminhoListaFii =
+            Path.Combine(Environment.CurrentDirectory.Contains("\\bin\\Debug\\net5.0") ?
+                    Environment.CurrentDirectory.Replace("\\bin\\Debug\\net5.0", "") : Environment.CurrentDirectory
+            , @"Cache\CacheFiles\FIICacheList.json");
+
+        private DateTime _ultimaModificacaoLista = File.GetLastWriteTime(Path.Combine(Environment.CurrentDirectory.Contains("\\bin\\Debug\\net5.0") ?
+                    Environment.CurrentDirectory.Replace("\\bin\\Debug\\net5.0", "") : Environment.CurrentDirectory
+            , @"Cache\CacheFiles\FIICacheList.json"));
+
+        private string _caminhoDetalhamentoFii = Path.Combine(Environment.CurrentDirectory.Contains("\\bin\\Debug\\net5.0") ?
+                    Environment.CurrentDirectory.Replace("\\bin\\Debug\\net5.0", "") : Environment.CurrentDirectory
+            , @"Cache\CacheFiles\FIIDetailCache.json");
+
+        private DateTime _ultimaModificacaoDetalhamento = File.GetLastWriteTime(Path.Combine(Environment.CurrentDirectory.Contains("\\bin\\Debug\\net5.0") ?
+                    Environment.CurrentDirectory.Replace("\\bin\\Debug\\net5.0", "") : Environment.CurrentDirectory
+            , @"Cache\CacheFiles\FIIDetailCache.json"));
         #endregion
 
         #region Propriedades
         public string caminhoListaFii
         {
             get { return this._caminhoListaFii; }
-            set { this._caminhoListaFii = value; }
         }
 
         public string caminhoDetalhamentoFii
         {
             get { return this._caminhoDetalhamentoFii; }
-            set { this._caminhoDetalhamentoFii = value; }
         }
 
         public DateTime ultimaModificacaoLista
         {
             get { return this._ultimaModificacaoLista; }
-            set { this._ultimaModificacaoLista = value; }
         }
         public DateTime ultimaModificacaoDetalhamento
         {
             get { return this._ultimaModificacaoDetalhamento; }
-            set { this._ultimaModificacaoDetalhamento = value; }
         }
         #endregion
 
@@ -47,6 +58,10 @@ namespace fiiCrawlerApi.Cache
         #endregion
 
         #region Métodos
+        /// <summary>
+        /// Verifica a existência de cache para a 
+        /// lista de resumo de FII's
+        /// </summary>
         public bool ExisteCacheLista()
         {
             var res = false;
@@ -56,27 +71,28 @@ namespace fiiCrawlerApi.Cache
             return res;
         }
 
+        /// <summary>
+        /// Verifica a existência de cache para algum
+        /// FII's espefíco
+        /// </summary>
         public bool ExisteNoCacheDeDetalhamento(string codigoFii)
         {
             // validar se o FII existe dentro da lista do cache
-            var cache = 
-                System.IO.File.ReadAllText(
-                    // ajuste para casos de teste
-                    this.caminhoDetalhamentoFii.Contains("\\bin\\Debug\\net5.0") ?
-                    $@"{this.pathParaAmbienteDeTeste}\\FIIDetailCache.json" : this.caminhoDetalhamentoFii
-                );
+            var cache = System.IO.File.ReadAllText(this.caminhoDetalhamentoFii);
             if (cache.Length == 0)
                 return false;
 
-            var lista = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cache);            
+            var lista = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cache);
             foreach (var fii in lista)
                 if (fii.codigoFii.ToLower() == codigoFii.ToLower())
                     return true;
-           
+
             return false;
         }
 
-
+        /// <summary>
+        /// Limpar cache da lista de resumo        
+        /// </summary>
         public void LimparCacheLista()
         {
             try
@@ -90,10 +106,14 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
+        /// <summary>
+        /// Verifica a existência de cache para a 
+        /// lista de resumo etalhamento de FII's
+        /// </summary>
         public void LimparCacheDetalhamento()
         {
             try
-            {                
+            {
                 System.IO.File.WriteAllText(this.caminhoDetalhamentoFii, string.Empty); //override cache text
             }
             catch (Exception e)
@@ -102,6 +122,9 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
+        /// <summary>
+        /// Salvar cache da lista de FII        
+        /// </summary>
         public void SalvarCacheLista(List<FII> list)
         {
             try
@@ -115,15 +138,14 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
+        /// <summary>
+        /// salvar cache da lista de detalhamento de FII's        
+        /// </summary>
         public void SalvarCacheDetalhamento(FIIDetalhado fii)
         {
             try
-            {                
-                var dadosArquivo = File.ReadAllText (
-                        // ajuste para casos de teste
-                        this.caminhoDetalhamentoFii.Contains("\\bin\\Debug\\net5.0") ?
-                        $@"{this.pathParaAmbienteDeTeste}\\FIIDetailCache.json" : this.caminhoDetalhamentoFii
-                    );
+            {
+                var dadosArquivo = File.ReadAllText(this.caminhoDetalhamentoFii);
                 var listaDadosDetalhamento = JsonConvert.DeserializeObject<List<FIIDetalhado>>(dadosArquivo);
                 if (listaDadosDetalhamento == null)
                     listaDadosDetalhamento = new List<FIIDetalhado>();
@@ -139,6 +161,9 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
+        /// <summary>
+        /// Retornar dados do cache da lista de resumo dos FII's
+        /// </summary>
         public async Task<List<FII>> RetornarDadosDeCacheLista()
         {
             try
@@ -153,6 +178,9 @@ namespace fiiCrawlerApi.Cache
             }
         }
 
+        /// <summary>
+        /// Retornar dados do cache da lista de detalhamento de FII's        
+        /// </summary>
         public async Task<FIIDetalhado> RetornarDadosDeCacheDetalhamento(string fiiBusca)
         {
             try
@@ -162,36 +190,38 @@ namespace fiiCrawlerApi.Cache
                 FIIDetalhado fiiDesejado = new FIIDetalhado { codigoFii = "", nomeCompleto = "", cota = "", variacao = "", valorizacao = "", };
 
                 // buscar FII dentro do cache
-                if (listaDetalhamento.Count > 0)
-                    foreach (var fii in listaDetalhamento)
-                        if (fii.codigoFii == fiiBusca)
-                        {
-                            fiiDesejado = new FIIDetalhado
+                if (listaDetalhamento != null)
+                    if (listaDetalhamento.Count > 0)
+                        foreach (var fii in listaDetalhamento)
+                            if (fii.codigoFii == fiiBusca)
                             {
-                                codigoFii = fii.codigoFii,
-                                nomeCompleto = fii.nomeCompleto,
-                                cota = fii.cota,
-                                variacao = fii.variacao,
-                                valorizacao = fii.valorizacao,
-                            };
-                        }
+                                fiiDesejado = new FIIDetalhado
+                                {
+                                    codigoFii = fii.codigoFii,
+                                    nomeCompleto = fii.nomeCompleto,
+                                    cota = fii.cota,
+                                    variacao = fii.variacao,
+                                    valorizacao = fii.valorizacao,
+                                };
+                            }
 
                 // acionar o web crawler para buscar informação do fii
-                if (fiiDesejado.codigoFii == "") 
+                if (fiiDesejado.codigoFii == "")
                 {
                     // validar se o FII existe dentro da lista do cache
                     var cacheLista = System.IO.File.ReadAllText(this.caminhoDetalhamentoFii);
                     var lista = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cacheDetalhamento);
                     bool encontrouFiiNaLista = false;
 
-                    foreach (var fii in lista)
-                        if (fii.codigoFii.ToLower() == fiiBusca.ToLower())
-                            encontrouFiiNaLista = true;
+                    if (lista != null)
+                        foreach (var fii in lista)
+                            if (fii.codigoFii.ToLower() == fiiBusca.ToLower())
+                                encontrouFiiNaLista = true;
 
-                    if (encontrouFiiNaLista)
+                    if (!encontrouFiiNaLista)
                     {
                         var crawler = new fiiCrawlerApi.WebScraper.Crawler();
-                        fiiDesejado = await crawler.ScrapeInformacaoFII(fiiBusca);
+                        fiiDesejado = await crawler.CrawlInformacaoFII(fiiBusca);
                         return fiiDesejado;
                     }
                     else

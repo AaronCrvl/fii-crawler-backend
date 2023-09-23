@@ -11,14 +11,13 @@ namespace fiiCrawlerApi.QuartzScheduler
 {
     public class Scheduler
     {
-        /*
-         * Tarefas para verificar e atualizar automaticamente
-         * o cache utilizado pela aplicação.
-         * 
-         * O intuito desta funcionadlidade é otimizar o
-         * processo de acesso aos dados da api visto que a mesma
-         * utilizar um webcrawler para compor os dados.
-         */
+        /// <summary>
+        /// Tarefas para verificar e atualizar automaticamente
+        /// o cache utilizado pela aplicação.         
+        /// O intuito desta funcionadlidade é otimizar o
+        /// processo de acesso aos dados da api visto que a mesma
+        /// utilizar um webcrawler para compor os dados.
+        /// </summary>    
         public async Task startSchedulerAsync()
         {
             // ref: https://www.quartz-scheduler.net/documentation/

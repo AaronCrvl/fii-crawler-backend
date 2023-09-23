@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace fiiCrawlerApi.Models
 {
+    /// <summary>
+    /// Modelo de ransferência de dados de FII
+    /// </summary>
     public class FII
     {
         public string nome;

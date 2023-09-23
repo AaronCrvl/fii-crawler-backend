@@ -26,7 +26,16 @@ namespace fiiCrawlerApi
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "fiiCrawlerApi", Version = "v1" });
+                c.SwaggerDoc("v1", 
+                    new OpenApiInfo { 
+                        Title = "fiiCrawlerApi", 
+                        Version = "v1",
+                        Contact = new OpenApiContact { 
+                                Name = "Aaron Carvalho", 
+                                Url = new System.Uri("https://github.com/AaronCrvl"), 
+                                Email = "carvalhosins@gmail.com" 
+                        } 
+                    });
             });
         }
 

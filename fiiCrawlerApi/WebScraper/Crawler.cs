@@ -24,7 +24,10 @@ namespace fiiCrawlerApi.WebScraper
         #endregion        
 
         #region Métodos
-        public async Task<List<FII>> ScrapeListaResumoFii()
+        /// <summary>
+        /// Web Crawling da lista de FII's        
+        /// </summary>
+        public async Task<List<FII>> CrawlListaResumoFii()
         {
             try
             {
@@ -48,19 +51,32 @@ namespace fiiCrawlerApi.WebScraper
 
                 // Acesso a página base
                 var pagina = await navegador.NewPageAsync();
-                await pagina.GoToAsync(@"https://fiis.com.br/resumo/", 0); // Web Crawler retorna o conjunto de dados na página
-                return this.scraper.CrawlDadosListaFii(pagina).Result;
+                await pagina.GoToAsync(@"https://fiis.com.br/resumo/", 0); // Web Crawler retorna o conjunto de dados na página                
+                System.Console.WriteLine("Crawled!");
+
+                return this.scraper.ScrapeDadosListaFii(pagina).Result;
             }
             catch (System.Exception ex)
             {
                 throw ex;
             }
+            finally
+            {
+                // garantir que a instância do navegador criada seja fechada
+                // Esse processo providencia um ciclo de vida melhor para a aplicação
+                // e uso de memória no ambiente em que a api for publicada
+                if (this.navegador != null && !this.navegador.IsClosed)
+                    await this.navegador.CloseAsync();                
+            }
         }
 
-        public async Task<FIIDetalhado> ScrapeInformacaoFII(string codigoFii)
+        /// <summary>
+        /// Web Crawling da lista de detalhamento dos FII's        
+        /// </summary>
+        public async Task<FIIDetalhado> CrawlInformacaoFII(string codigoFii)
         {
             try
-            {                
+            {
                 /*
                  * Caminho do browser que vai ser utilizado e configuração headless.
                  * 
@@ -68,7 +84,7 @@ namespace fiiCrawlerApi.WebScraper
                  * que fornecem o controle das páginas da web 
                  * mas são executados através de uma aplicação externa
                 */
-                
+
                 this.navegador = await Puppeteer.LaunchAsync(
                     new LaunchOptions
                     {
@@ -83,13 +99,23 @@ namespace fiiCrawlerApi.WebScraper
                 // Acesso a página base
                 var paginaWeb = await navegador.NewPageAsync();
                 await paginaWeb.GoToAsync($"https://fiis.com.br/resumo/{codigoFii}", 0); // Web Crawler retorna o conjunto de dados na página                
-                return scraper.CrawlDadosFII(codigoFii, paginaWeb).Result;
+                System.Console.WriteLine("Crawled!");
+
+                return scraper.ScrapelDadosFII(codigoFii, paginaWeb).Result;
             }
             catch (System.Exception ex)
             {
                 throw ex;
             }
-        }                
-        #endregion        
+            finally
+            {
+                // Garantir que a instância do navegador criada seja fechada.
+                // Esse processo providencia um ciclo de vida melhor para a aplicação
+                // e uso de memória no ambiente em que a api for publicada
+                if (this.navegador != null && !this.navegador.IsClosed)
+                    await this.navegador.CloseAsync();                
+            }
+        }
+        #endregion
     }
 }

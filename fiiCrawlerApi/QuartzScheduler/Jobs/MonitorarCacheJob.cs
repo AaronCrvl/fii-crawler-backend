@@ -11,6 +11,9 @@ namespace fiiCrawlerApi.QuartzScheduler.Jobs
     /// </summary>
     public class MonitorarCacheJob : Quartz.IJob
     {
+        /// <summary>
+        /// Job principal da aplicação
+        /// </summary>
         public async Task Execute(IJobExecutionContext context)
         {
             var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
@@ -18,7 +21,7 @@ namespace fiiCrawlerApi.QuartzScheduler.Jobs
                     cache.ExisteCacheLista()
                     && DateTime.Now.Year == cache.ultimaModificacaoLista.Year
                     && DateTime.Now.Month == cache.ultimaModificacaoLista.Month
-                    && DateTime.Now.Day == cache.ultimaModificacaoLista.Day                    
+                    && DateTime.Now.Day == cache.ultimaModificacaoLista.Day
                     && DateTime.Now.Hour == cache.ultimaModificacaoLista.Hour
                     && (DateTime.Now.Minute - cache.ultimaModificacaoLista.Minute) <= 30 // atualizar a cada 30 minutos
                 )
@@ -26,7 +29,7 @@ namespace fiiCrawlerApi.QuartzScheduler.Jobs
             else
             {
                 cache.LimparCacheLista();
-                cache.SalvarCacheLista(new fiiCrawlerApi.WebScraper.Crawler().ScrapeListaResumoFii().Result);
+                cache.SalvarCacheLista(new fiiCrawlerApi.WebScraper.Crawler().CrawlListaResumoFii().Result);
             }
 
             await Task.FromResult(true);
