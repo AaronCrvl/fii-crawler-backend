@@ -23,4 +23,4 @@ gh repo clone AaronCrvl/-fiiCrawler-backend
 
 
 ## 🚧 Arquitetura do Projeto
-![ArquiteturaFIICrawlerPNG](https://github.com/AaronCrvl/-fiiCrawler-backend/assets/72924198/88a37e71-d15c-49b2-ac8e-8de49a259f70)
+![ArquiteturaFIICrawlerPNG](https://github.com/AaronCrvl/FIICrawler-backend/assets/72924198/93e99c99-bbe1-4961-a602-9c47fb67676e)
