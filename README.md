@@ -1,6 +1,6 @@
 # 📈fiiCrawlerAPI 
 
-Este projeto é uma api Asp Net Core feito para suportar uma aplicação front end em React Js. 
+Este projeto é uma api Asp Net Core feito para suportar uma [aplicação front end em React Js](https://github.com/AaronCrvl/fii-crawler-web). 
 
 Neste projeto trabalho conceitos como o padrão a transmissão de informações entre aplicações via api, o conjunto de restrições de arquitetura REST, o framework Puppeteer, utilizado para trabalhar com web sraping e web crawling e o gerenciamento de tarefas em background da aplicação através do framwework Quartz.NET.
 
