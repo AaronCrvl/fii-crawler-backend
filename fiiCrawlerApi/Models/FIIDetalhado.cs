@@ -6,7 +6,9 @@ namespace fiiCrawlerApi.Models
     /// </summary>
     public class FIIDetalhado
     {
+        public string userId;
         public string codigoFii;
+        public int qtdCotas;
         public string nomeCompleto;
         public string cota;
         public string variacao;

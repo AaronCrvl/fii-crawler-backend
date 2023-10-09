@@ -1,38 +1,34 @@
-﻿using fiiCrawlerApi.Models;
+﻿using fiiCrawlerApi.Authorization.Security;
+using fiiCrawlerApi.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace fiiCrawlerApi.Controllers
 {
-    public class FiiController : Controller
+    [Route("v1/fii")]
+    public class FIIController : Controller
     {
         /// <summary>
         /// Retornar lista de FII's.        
         /// </summary>
         [HttpGet]
-        //[EnableCors()]
-        [Route("getListaResumo/")]
-        //https://localhost:44304/Fii/getListaResumo/
-        public ActionResult GetListaResumo()
+        [Authorize]
+        [Route("listaResumo")]
+        //https://localhost:44304/v1/fii/listaResumo        
+        public async Task<ActionResult> BuscarListaResumidaFundosInvestimento()
         {
             try
-            {
-                /*
-                 * CORS !_________________________________________
-                 * 
-                 * Headers necessários para evitar bloqueios do CORS.
-                 * Neste caso são enviados headers específicos para permitir
-                 * o acesso vindo de todas as origens externas a da api (https://localhost:44304/)
-                 * e para o acesso ao tipo de método requisitado.
-                */
+            {              
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET");
 
                 var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
-
                 List<FII> dados = new List<FII>();
                 dados = cache.RetornarDadosDeCacheLista().Result;
 
@@ -55,33 +51,27 @@ namespace fiiCrawlerApi.Controllers
         /// Retornar informações detalhadas de um FII's específico.
         /// </summary>
         [HttpGet]
-        //[EnableCors()]
-        [Route("getFII/{fiiBusca}")]
-        //https://localhost:44304/Fii/getFII/{fiiBusca}
-        public ActionResult GetFii(string fiiBusca)
+        [Route("{fiiBusca}")]
+        [Authorize]
+        //https://localhost:44304/v1/fii/fiiBusca
+        public async Task<ActionResult> BuscarFundoDeInvestimento(string fiiBusca, string userId)
         {
             try
-            {
-                /*
-                 * CORS !_________________________________________
-                 * 
-                 * Headers necessários para evitar bloqueios do CORS.
-                 * Neste caso são enviados headers específicos para permitir
-                 * o acesso vindo de todas as origens externas a da api (https://localhost:44304/)
-                 * e para o acesso ao tipo de método requisitado.
-                */
+            {             
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET");
 
                 var fundo = new FIIDetalhado();
                 var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
-                if (!cache.ExisteNoCacheDeDetalhamento(fiiBusca))
+                if (cache.ExisteNoCacheDeDetalhamento(fiiBusca, userId))
+                    fundo = cache.RetornarDadosDeCacheDetalhamento(fiiBusca).Result;
+                else
                 {
                     fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fiiBusca).Result;
+                    fundo.userId = userId;
                     cache.SalvarCacheDetalhamento(fundo);
                 }
-                else
-                    fundo = cache.RetornarDadosDeCacheDetalhamento(fiiBusca).Result;
+
 
                 if (fundo.codigoFii != "")
                 {
@@ -99,6 +89,66 @@ namespace fiiCrawlerApi.Controllers
                     res200.ContentType = "application/json";
                     return res200;
                 }
+            }
+            catch (Exception ex)
+            {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                ContentResult res500 = new ContentResult();
+                res500.Content = ex.Message;
+                return res500;
+            }
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("listaFIIusuario")]
+        //https://localhost:44304/v1/fii/listaFIIusuario
+        public async Task<ActionResult> ListagemFIICarteiraUsuario(string userID)
+        {
+            try
+            {              
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET");
+
+                var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
+                List<FIIDetalhado> dados = new List<FIIDetalhado>();
+                dados = cache.RetornarListaDadosDeCacheDetalhamento(userID).Result;
+
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                ContentResult res200 = new ContentResult();
+                res200.Content = JsonConvert.SerializeObject(dados);
+                res200.ContentType = "application/json";
+                return res200;
+            }
+            catch (Exception ex)
+            {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                ContentResult res500 = new ContentResult();
+                res500.Content = ex.Message;
+                return res500;
+            }
+        }
+
+        /// <summary>
+        /// Efetuar compra de uma quantidade de cotas de um FII
+        /// </summary>
+        [HttpGet]
+        [Authorize]
+        [Route("registrarCompra")]
+        //https://localhost:44304/v1/fii/registrarCompra
+        public async Task<ActionResult> RegistrarCompra([FromBody] Transacao transacao)
+        {
+            try
+            {               
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET");
+
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
+                ContentResult res200 = new ContentResult();
+                res200.Content = $"Compra de {transacao.qtdCotas} cotas fundo {transacao.codigoFII} registrada com sucesso!";
+                res200.ContentType = "application/json";
+                return res200;
+
             }
             catch (Exception ex)
             {

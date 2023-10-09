@@ -75,8 +75,12 @@ namespace fiiCrawlerApi.Cache
         /// Verifica a existência de cache para algum
         /// FII's espefíco
         /// </summary>
-        public bool ExisteNoCacheDeDetalhamento(string codigoFii)
+        public bool ExisteNoCacheDeDetalhamento(string codigoFii, string idUser)
         {
+            if (idUser is null)
+            {
+                throw new ArgumentNullException(nameof(idUser));
+            }
             // validar se o FII existe dentro da lista do cache
             var cache = System.IO.File.ReadAllText(this.caminhoDetalhamentoFii);
             if (cache.Length == 0)
@@ -84,7 +88,8 @@ namespace fiiCrawlerApi.Cache
 
             var lista = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cache);
             foreach (var fii in lista)
-                if (fii.codigoFii.ToLower() == codigoFii.ToLower())
+                if (fii.codigoFii.ToLower() == codigoFii.ToLower()
+                    && fii.userId == idUser)
                     return true;
 
             return false;
@@ -98,7 +103,7 @@ namespace fiiCrawlerApi.Cache
             try
             {
                 if (ExisteCacheLista())
-                    System.IO.File.WriteAllText(this.caminhoListaFii, string.Empty); //override cache text
+                    File.WriteAllText(this.caminhoListaFii, string.Empty); //override cache text
             }
             catch (Exception e)
             {
@@ -114,7 +119,7 @@ namespace fiiCrawlerApi.Cache
         {
             try
             {
-                System.IO.File.WriteAllText(this.caminhoDetalhamentoFii, string.Empty); //override cache text
+                File.WriteAllText(this.caminhoDetalhamentoFii, string.Empty); //override cache text
             }
             catch (Exception e)
             {
@@ -130,7 +135,7 @@ namespace fiiCrawlerApi.Cache
             try
             {
                 var json = JsonConvert.SerializeObject(list);
-                System.IO.File.WriteAllText(this.caminhoListaFii, json); //write string to file
+                File.WriteAllText(this.caminhoListaFii, json); //write string to file
             }
             catch (Exception e)
             {
@@ -147,13 +152,13 @@ namespace fiiCrawlerApi.Cache
             {
                 var dadosArquivo = File.ReadAllText(this.caminhoDetalhamentoFii);
                 var listaDadosDetalhamento = JsonConvert.DeserializeObject<List<FIIDetalhado>>(dadosArquivo);
+
                 if (listaDadosDetalhamento == null)
                     listaDadosDetalhamento = new List<FIIDetalhado>();
-
                 listaDadosDetalhamento.Add(fii);
 
                 var json = JsonConvert.SerializeObject(listaDadosDetalhamento);
-                System.IO.File.WriteAllText(this.caminhoDetalhamentoFii, json); //write string to file
+                File.WriteAllText(this.caminhoDetalhamentoFii, json); //write string to file
             }
             catch (Exception e)
             {
@@ -168,7 +173,7 @@ namespace fiiCrawlerApi.Cache
         {
             try
             {
-                var cache = System.IO.File.ReadAllText(this.caminhoListaFii);
+                var cache = File.ReadAllText(this.caminhoListaFii);
                 var lista = JsonConvert.DeserializeObject<List<FII>>(cache);
                 return lista;
             }
@@ -185,7 +190,7 @@ namespace fiiCrawlerApi.Cache
         {
             try
             {
-                var cacheDetalhamento = System.IO.File.ReadAllText(this.caminhoDetalhamentoFii);
+                var cacheDetalhamento = File.ReadAllText(this.caminhoDetalhamentoFii);
                 var listaDetalhamento = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cacheDetalhamento);
                 FIIDetalhado fiiDesejado = new FIIDetalhado { codigoFii = "", nomeCompleto = "", cota = "", variacao = "", valorizacao = "", };
 
@@ -209,7 +214,7 @@ namespace fiiCrawlerApi.Cache
                 if (fiiDesejado.codigoFii == "")
                 {
                     // validar se o FII existe dentro da lista do cache
-                    var cacheLista = System.IO.File.ReadAllText(this.caminhoDetalhamentoFii);
+                    var cacheLista = File.ReadAllText(this.caminhoDetalhamentoFii);
                     var lista = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cacheDetalhamento);
                     bool encontrouFiiNaLista = false;
 
@@ -220,7 +225,7 @@ namespace fiiCrawlerApi.Cache
 
                     if (!encontrouFiiNaLista)
                     {
-                        var crawler = new fiiCrawlerApi.WebScraper.Crawler();
+                        var crawler = new WebScraper.Crawler();
                         fiiDesejado = await crawler.CrawlInformacaoFII(fiiBusca);
                         return fiiDesejado;
                     }
@@ -230,6 +235,21 @@ namespace fiiCrawlerApi.Cache
                 // retornar FII encontrado no cache
                 else
                     return fiiDesejado;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<List<FIIDetalhado>> RetornarListaDadosDeCacheDetalhamento(string userId)
+        {
+            try
+            {
+                var cacheDetalhamento = File.ReadAllText(this.caminhoDetalhamentoFii);
+                List<FIIDetalhado> listaDetalhamento = JsonConvert.DeserializeObject<List<FIIDetalhado>>(cacheDetalhamento);
+                listaDetalhamento.Find(item => item.userId == userId);                                
+                return listaDetalhamento;
             }
             catch (Exception e)
             {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace fiiCrawlerApi.Models
+﻿namespace fiiCrawlerApi.Models
 {
     /// <summary>
-    /// Modelo de ransferência de dados de FII
+    /// Modelo de transferência de dados de FII
     /// </summary>
     public class FII
     {

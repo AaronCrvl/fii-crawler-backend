@@ -1,1 +1,12 @@
-[{"codigoFii":"tepp11","nomeCompleto":"TELLUS PROPERTIES - FDO INV. IMO","cota":"R$ 91,31","variacao":"- 0,10%","valorizacao":null,"historicoDividendos":null,"administrador":null}]
+[
+  {
+    "codigoFii": "tepp11",
+    "nomeCompleto": "TELLUS PROPERTIES - FDO INV. IMO",
+    "cota": "R$ 91,31",
+    "variacao": "- 0,10%",
+    "valorizacao": null,
+    "historicoDividendos": null,
+    "administrador": null,
+    "userId" :  "User1",
+  }
+]

@@ -75,7 +75,7 @@ namespace ApiTests.TestCases.UnitTests
             try
             {
                 var gerenciador = new fiiCrawlerApi.Cache.GerenciadorDeCache();
-                if (gerenciador.ExisteNoCacheDeDetalhamento(fiiDetalhamentoTeste.codigoFii))
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fiiDetalhamentoTeste.codigoFii, "1"))
                 {
                     gerenciador.LimparCacheDetalhamento();
                     gerenciador.SalvarCacheDetalhamento(fiiDetalhamentoTeste);
@@ -101,7 +101,7 @@ namespace ApiTests.TestCases.UnitTests
 
                 #region Casos de Teste
                 string fii1 = "tepp11";
-                if (gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                 {
                     var fundo = gerenciador.RetornarDadosDeCacheDetalhamento(fiiDetalhamentoTeste.codigoFii).Result;
                     Console.WriteLine($"Fundo Detalhado!");
@@ -113,7 +113,7 @@ namespace ApiTests.TestCases.UnitTests
                 else
                 {
                     var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii1).Result;
-                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                         gerenciador.SalvarCacheDetalhamento(fundo);
 
                     Console.WriteLine($"Fundo Detalhado!");
@@ -127,7 +127,7 @@ namespace ApiTests.TestCases.UnitTests
                 Console.WriteLine();
 
                 string fii2 = "hgff11";
-                if (gerenciador.ExisteNoCacheDeDetalhamento(fii2))
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fii2, "1"))
                 {
                     var fundo = gerenciador.RetornarDadosDeCacheDetalhamento(fii2).Result;
                     Console.WriteLine($"Fundo Detalhado!");
@@ -139,7 +139,7 @@ namespace ApiTests.TestCases.UnitTests
                 else
                 {
                     var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii2).Result;
-                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                         gerenciador.SalvarCacheDetalhamento(fundo);
 
                     Console.WriteLine($"Fundo Detalhado!");
@@ -153,7 +153,7 @@ namespace ApiTests.TestCases.UnitTests
                 Console.WriteLine();
 
                 string fii3 = "bcff11";
-                if (gerenciador.ExisteNoCacheDeDetalhamento(fii3))
+                if (gerenciador.ExisteNoCacheDeDetalhamento(fii3, "1"))
                 {
                     var fundo = gerenciador.RetornarDadosDeCacheDetalhamento(fii3).Result;
                     Console.WriteLine($"Fundo Detalhado!");
@@ -165,7 +165,7 @@ namespace ApiTests.TestCases.UnitTests
                 else
                 {
                     var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii3).Result;
-                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1))
+                    if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                         gerenciador.SalvarCacheDetalhamento(fundo);
 
                     Console.WriteLine($"Fundo Detalhado!");
