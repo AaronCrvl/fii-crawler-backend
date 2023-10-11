@@ -226,7 +226,7 @@ namespace fiiCrawlerApi.Cache
                     if (!encontrouFiiNaLista)
                     {
                         var crawler = new WebScraper.Crawler();
-                        fiiDesejado = await crawler.CrawlInformacaoFII(fiiBusca);
+                        fiiDesejado = await crawler.CrawlInformacaoFIIAsync(fiiBusca);
                         return fiiDesejado;
                     }
                     else

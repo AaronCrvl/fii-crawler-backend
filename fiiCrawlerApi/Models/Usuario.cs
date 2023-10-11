@@ -7,9 +7,10 @@ namespace fiiCrawlerApi.Models
 {
     public class Usuario
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Role { get; set; }
+        public int id { get; set; }        
+        public string username { get; set; }
+        public string senha { get; set; }
+        public string categoria { get; set; }
+        public string tipo { get; set; }
     }
 }

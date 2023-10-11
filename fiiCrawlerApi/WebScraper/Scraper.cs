@@ -1,6 +1,9 @@
 ﻿using fiiCrawlerApi.Models;
+using Microsoft.AspNetCore.Http;
 using PuppeteerSharp;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace fiiCrawlerApi.WebScraper
@@ -199,11 +202,11 @@ namespace fiiCrawlerApi.WebScraper
             }
             finally
             {
-                // garantir que a instância do navegador criada seja fechada
+                // Garantir que a instância do navegador criada seja fechada.
                 // Esse processo providencia um ciclo de vida melhor para a aplicação
                 // e uso de memória no ambiente em que a api for publicada
                 if (this.navegador != null && !this.navegador.IsClosed)
-                    await this.navegador.CloseAsync();             
+                    await this.navegador.CloseAsync();
             }
         }
 
@@ -223,39 +226,42 @@ namespace fiiCrawlerApi.WebScraper
             */
             try
             {
-                #region Scraping Lista de FII
-                string jsSelecionarTodosOsNomes = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[0]?.innerText);";
-                var nomesFii = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosOsNomes);
+                #region Scraping Lista de FII                
+                string[] 
+                    nomesFii = System.Array.Empty<string>(), 
+                    ultimosRendimentosRs = System.Array.Empty<string>(), 
+                    ultimosRendimentos = System.Array.Empty<string>(), 
+                    datasDePagamento = System.Array.Empty<string>(), 
+                    datasBase = System.Array.Empty<string>(), 
+                    rendimentoMedioAnual = System.Array.Empty<string>(), 
+                    patrimonios = System.Array.Empty<string>(), 
+                    cotas = System.Array.Empty<string>();
 
-                string jsSelecionarTodosOsUltimosRendimentosRs = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[1]?.innerText);";
-                var ultimosRendimentosRs = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosOsUltimosRendimentosRs);
-
-                string jsSelecionarTodosOsUltimosRendimentos = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[2]?.innerText);";
-                var ultimosRendimentos = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosOsUltimosRendimentos);
-
-                string jsSelecionarTodosAsDatasDePagamento = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[3]?.innerText);";
-                var datasDePagamento = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosAsDatasDePagamento);
-
-                string jsSelecionarTodosAsDatasBase = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[4]?.innerText);";
-                var datasBase = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosAsDatasBase);
-
-                string jsSelecionarTodosOsRedimentoMedioAnual = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[5]?.innerText);";
-                var rendimentoMedioAnual = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosOsRedimentoMedioAnual);
-
-                string jsSelecionarTodosOsPatrimonios = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[6]?.innerText);";
-                var patrimonios = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodosOsPatrimonios);
-
-                string jsSelecionarTodasAsCotas = @"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[7]?.innerText);";
-                var cotas = await paginaWeb.EvaluateExpressionAsync<string[]>(jsSelecionarTodasAsCotas);
-                #endregion                
-
-                // Criando novos objetos DTO com base nos dados recebidos.
+                int[] campos = { 0, 1, 2, 3, 4, 5, 6, 7 };
                 List<FII> fiis = new List<FII>();
+
+                foreach (int campo in campos)
+                    _ = campo switch
+                    {
+                        0 => nomesFii = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        1 => ultimosRendimentosRs = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        2 => ultimosRendimentos = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        3 => datasDePagamento = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        4 => datasBase = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        5 => rendimentoMedioAnual = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        6 => patrimonios = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        7 => cotas = await paginaWeb.EvaluateExpressionAsync<string[]>(@$"Array.from(document.querySelectorAll('tr')).map(tr => tr.getElementsByTagName('td')[{campo}]?.innerText);"),
+                        _ => throw new System.NotImplementedException(),
+                    };
+
+                #endregion
+
                 if (nomesFii.Length > 0)
                 {
                     // a primeira linha é o nome das colunas da tabela,
                     // como este dado não será utilizado o mesmo pode ser ignorado
                     for (int i = 1; i < ultimosRendimentos.Length; ++i)
+                    {
                         fiis.Add(
                             new FII
                             {
@@ -269,6 +275,7 @@ namespace fiiCrawlerApi.WebScraper
                                 cota = cotas[i]
                             }
                         );
+                    }
                 }
 
                 // fechar o browser toda vez que finalizar
@@ -285,12 +292,53 @@ namespace fiiCrawlerApi.WebScraper
             }
             finally
             {
-                // garantir que a instância do navegador criada seja fechada
+                // Garantir que a instância do navegador criada seja fechada.
                 // Esse processo providencia um ciclo de vida melhor para a aplicação
                 // e uso de memória no ambiente em que a api for publicada
                 if (this.navegador != null && !this.navegador.IsClosed)
-                    await this.navegador.CloseAsync();                
+                    await this.navegador.CloseAsync();
             }
+        }
+
+        public async Task<List<Noticia>> ScrapeNoticiasFIIAsync(IPage paginaWeb)
+        {
+            try
+            {
+                #region Web Scrape Notícias FII's
+                string scrapedUrls = @"Array.from(document.getElementsByClassName('loopNoticias')).map(div => div.querySelector('a').getAttribute('href'))";
+                var urls = await paginaWeb.EvaluateExpressionAsync(scrapedUrls);
+
+                string scrapedTitulos = @"Array.from(document.getElementsByClassName('loopNoticias')).map(div => div.querySelector('div').querySelector('a').innerText)";
+                var titulos = await paginaWeb.EvaluateExpressionAsync(scrapedTitulos);
+
+                string scrapedTempoPassado = @"Array.from(document.getElementsByClassName('loopNoticias')).map(div => div.getElementsByTagName('a')[0].getElementsByClassName('loopNoticias__readingTime')[0].innerText)";
+                var tempoPassados = await paginaWeb.EvaluateExpressionAsync(scrapedTempoPassado);
+
+                string scrapedImagensUrls = @"Array.from(document.getElementsByClassName('loopNoticias')).map(div => div.getElementsByTagName('a')[0].getElementsByTagName('img')[0].getAttribute('src'))";
+                var urlImagens = await paginaWeb.EvaluateExpressionAsync(scrapedImagensUrls);
+                #endregion
+
+                var noticias = new List<Noticia>();
+                for(int i=0; i < urls.Count(); ++i)
+                {
+                    noticias.Add(new Noticia
+                    {
+                        url = (string)urls[i],
+                        titulo = (string)titulos[i],
+                        urlImagem = (string)urlImagens[i],
+                        tempoPassado = (string)tempoPassados[i],
+                    });
+                }
+
+                // fechar o navegador
+                await paginaWeb.CloseAsync();
+                System.Console.WriteLine("Scraped!");
+                return noticias;
+            }
+            catch (System.Exception e)
+            {
+                throw e;
+            }           
         }
     }
     #endregion

@@ -1,4 +1,4 @@
-﻿using fiiCrawlerApi.Authorization.Security;
+﻿using fiiCrawlerApi.Autenticacao.Seguranca;
 using fiiCrawlerApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,24 +18,27 @@ namespace fiiCrawlerApi.Controllers
         /// e retorna a chave baseada na autenticação JWT para o usuário
         /// </summary>
         [HttpGet]
-        [Route("autenticar")]
-        //https://localhost:44304/aunteticar       
-        public ActionResult Autenticar([FromBody]Usuario model)
+        [Route("autenticar")]           
+        public ActionResult Autenticar([FromBody] Usuario model)
         {
             try
             {
-                var usuario = new Usuario { Id = model.Id, Username = model.Username, Password = model.Password, Role = model.Role };
-
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.OK;
-                return new ContentResult { Content = Token.GenerateToken(usuario), ContentType = "application/json" };
+                var usuario = new Usuario { id = model.id, username = model.username, senha = model.senha, categoria = model.categoria, tipo = model.tipo };
+                return new ContentResult
+                {
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Content = Token.GenerateToken(usuario),
+                    ContentType = "application/json",
+                };
             }
             catch (Exception ex)
             {
-                HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                ContentResult res200 = new ContentResult();
-                res200.Content = JsonConvert.SerializeObject(ex.Message);
-                res200.ContentType = "application/json";
-                return res200;
+                return new ContentResult
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized,
+                    Content = JsonConvert.SerializeObject(ex.Message),
+                    ContentType = "application/json",
+                };
             }
         }
     }

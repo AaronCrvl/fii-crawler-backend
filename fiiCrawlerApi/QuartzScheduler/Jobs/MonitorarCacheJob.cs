@@ -29,7 +29,7 @@ namespace fiiCrawlerApi.QuartzScheduler.Jobs
             else
             {
                 cache.LimparCacheLista();
-                cache.SalvarCacheLista(new fiiCrawlerApi.WebScraper.Crawler().CrawlListaResumoFii().Result);
+                cache.SalvarCacheLista(new fiiCrawlerApi.WebScraper.Crawler().CrawlListaResumoFiiAsync().Result);
             }
 
             await Task.FromResult(true);

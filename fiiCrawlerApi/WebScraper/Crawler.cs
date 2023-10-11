@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using fiiCrawlerApi.Models;
+using System;
 
 namespace fiiCrawlerApi.WebScraper
 {
@@ -27,7 +28,7 @@ namespace fiiCrawlerApi.WebScraper
         /// <summary>
         /// Web Crawling da lista de FII's        
         /// </summary>
-        public async Task<List<FII>> CrawlListaResumoFii()
+        public async Task<List<FII>> CrawlListaResumoFiiAsync()
         {
             try
             {
@@ -73,7 +74,7 @@ namespace fiiCrawlerApi.WebScraper
         /// <summary>
         /// Web Crawling da lista de detalhamento dos FII's        
         /// </summary>
-        public async Task<FIIDetalhado> CrawlInformacaoFII(string codigoFii)
+        public async Task<FIIDetalhado> CrawlInformacaoFIIAsync(string codigoFii)
         {
             try
             {
@@ -115,6 +116,48 @@ namespace fiiCrawlerApi.WebScraper
                 if (this.navegador != null && !this.navegador.IsClosed)
                     await this.navegador.CloseAsync();                
             }
+        }
+
+        public async Task<List<List<Noticia>>> CrawlNoticiasFIIAsync(string[] codigos)
+        {
+            try
+            {
+                this.navegador = await Puppeteer.LaunchAsync(
+                   new LaunchOptions
+                   {
+                       Headless = true,
+                       ExecutablePath = this.caminhoArquivoExecutavelNavegador
+                   });
+
+                // passando a referência da instância do navegador para que
+                // o mesmo possa ser fechado após a extração de dados
+                scraper = new Scraper(ref navegador);
+
+                // Acesso a página base
+                var listaNoticias = new List<List<Noticia>>();
+
+                foreach (string fii in codigos)
+                {
+                    var paginaWeb = await navegador.NewPageAsync();
+                    await paginaWeb.GoToAsync($"https://fiis.com.br/noticias/?n={fii}", 0); // Web Crawler retorna o conjunto de dados na página                
+                    System.Console.WriteLine("Crawled!");
+                    listaNoticias.Add(await scraper.ScrapeNoticiasFIIAsync(paginaWeb));
+                }
+
+                return listaNoticias;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+            finally
+            {
+                // Garantir que a instância do navegador criada seja fechada.
+                // Esse processo providencia um ciclo de vida melhor para a aplicação
+                // e uso de memória no ambiente em que a api for publicada
+                if (this.navegador != null && !this.navegador.IsClosed)
+                    await this.navegador.CloseAsync();
+            }            
         }
         #endregion
     }

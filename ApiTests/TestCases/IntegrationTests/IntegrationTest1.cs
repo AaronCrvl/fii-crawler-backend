@@ -11,7 +11,7 @@ namespace ApiTests.TestCases.IntegrationTests
         {
             try
             {
-                var lista = new fiiCrawlerApi.WebScraper.Crawler().CrawlListaResumoFii().Result;
+                var lista = new fiiCrawlerApi.WebScraper.Crawler().CrawlListaResumoFiiAsync().Result;
                 foreach (var fundo in lista)
                     Console.WriteLine($"Item da Lista de Fii: {fundo.nome}");
             }
@@ -26,7 +26,7 @@ namespace ApiTests.TestCases.IntegrationTests
         {
             try
             {
-                var fundoDeInvestimento = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII("tepp11").Result;
+                var fundoDeInvestimento = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync("tepp11").Result;
                 Console.WriteLine(
                     "Fii Retornado! \t\n"
                     + $"Código: {fundoDeInvestimento.codigoFii}\t\n"
@@ -46,7 +46,7 @@ namespace ApiTests.TestCases.IntegrationTests
         {
             try
             {
-                var fundoDeInvestimento = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII("bcff11").Result;
+                var fundoDeInvestimento = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync("bcff11").Result;
                 Console.WriteLine(
                     "Dividendos do Fii Retornado! \t\n"
                     + $"Código: {fundoDeInvestimento.codigoFii}\t\n"
@@ -73,25 +73,8 @@ namespace ApiTests.TestCases.IntegrationTests
         public void RetornoDadosFii_Administrador()
         {
             try
-            {
-                var fundoDeInvestimento = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII("hgff11").Result;
-                Console.WriteLine(
-                    $"Dividendos do Administrador do {fundoDeInvestimento.codigoFii.ToUpper()}! \t\n"
-                    + $"CNPJ: {fundoDeInvestimento.administrador.cnpj}\t\n"
-                    + $"Email: {fundoDeInvestimento.administrador.email}\t\n"
-                    + $"Nome Pregão: {fundoDeInvestimento.administrador.nomeNoPregao}\t\n"
-                    + $"Patrimônio: {fundoDeInvestimento.administrador.patrimonio}\t\n"
-                    + $"Razão Social: {fundoDeInvestimento.administrador.razaoSocial}\t\n"
-                    + $"Público Alvo: {fundoDeInvestimento.administrador.publicoAlvo}\t\n"
-                    + $"Segmento: {fundoDeInvestimento.administrador.segmento}\t\n"
-                    + $"Número de Cotas: {fundoDeInvestimento.administrador.numeroDeCotas}\t\n"
-                    + $"Site: {fundoDeInvestimento.administrador.site}\t\n"
-                );
-
-                Console.WriteLine();
-                Console.WriteLine();
-
-                var fundoDeInvestimento2 = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII("bcff11").Result;
+            {               
+                var fundoDeInvestimento2 = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync("bcff11").Result;
                 Console.WriteLine(
                     $"Dividendos do Administrador do {fundoDeInvestimento2.codigoFii.ToUpper()}! \t\n"
                     + $"CNPJ: {fundoDeInvestimento2.administrador.cnpj}\t\n"
@@ -109,7 +92,7 @@ namespace ApiTests.TestCases.IntegrationTests
                 Console.WriteLine();
                 Console.WriteLine();
 
-                var fundoDeInvestimento3 = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII("tepp11").Result;
+                var fundoDeInvestimento3 = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync("tepp11").Result;
                 Console.WriteLine(
                     $"Dividendos do Administrador do {fundoDeInvestimento3.codigoFii.ToUpper()}! \t\n"
                     + $"CNPJ: {fundoDeInvestimento3.administrador.cnpj}\t\n"

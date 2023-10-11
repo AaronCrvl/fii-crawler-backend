@@ -112,7 +112,7 @@ namespace ApiTests.TestCases.UnitTests
                 }
                 else
                 {
-                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii1).Result;
+                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync(fii1).Result;
                     if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                         gerenciador.SalvarCacheDetalhamento(fundo);
 
@@ -138,7 +138,7 @@ namespace ApiTests.TestCases.UnitTests
                 }
                 else
                 {
-                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii2).Result;
+                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync(fii2).Result;
                     if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                         gerenciador.SalvarCacheDetalhamento(fundo);
 
@@ -164,7 +164,7 @@ namespace ApiTests.TestCases.UnitTests
                 }
                 else
                 {
-                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fii3).Result;
+                    var fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync(fii3).Result;
                     if (!gerenciador.ExisteNoCacheDeDetalhamento(fii1, "1"))
                         gerenciador.SalvarCacheDetalhamento(fundo);
 

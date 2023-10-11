@@ -1,4 +1,4 @@
-﻿using fiiCrawlerApi.Authorization.Security;
+﻿using fiiCrawlerApi.Autenticacao.Seguranca;
 using fiiCrawlerApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -51,10 +51,10 @@ namespace fiiCrawlerApi.Controllers
         /// Retornar informações detalhadas de um FII's específico.
         /// </summary>
         [HttpGet]
-        [Route("{fiiBusca}")]
+        [Route("buscarFundo/{fiiBusca}")]
         [Authorize]
         //https://localhost:44304/v1/fii/fiiBusca
-        public async Task<ActionResult> BuscarFundoDeInvestimento(string fiiBusca, string userId)
+        public async Task<ActionResult> BuscarFundoDeInvestimento([FromBody]string fiiBusca, string userId)
         {
             try
             {             
@@ -67,7 +67,7 @@ namespace fiiCrawlerApi.Controllers
                     fundo = cache.RetornarDadosDeCacheDetalhamento(fiiBusca).Result;
                 else
                 {
-                    fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFII(fiiBusca).Result;
+                    fundo = new fiiCrawlerApi.WebScraper.Crawler().CrawlInformacaoFIIAsync(fiiBusca).Result;
                     fundo.userId = userId;
                     cache.SalvarCacheDetalhamento(fundo);
                 }
@@ -103,7 +103,7 @@ namespace fiiCrawlerApi.Controllers
         [Authorize]
         [Route("listaFIIusuario")]
         //https://localhost:44304/v1/fii/listaFIIusuario
-        public async Task<ActionResult> ListagemFIICarteiraUsuario(string userID)
+        public async Task<ActionResult> ListagemFIICarteiraUsuario([FromBody]string userID)
         {
             try
             {              
