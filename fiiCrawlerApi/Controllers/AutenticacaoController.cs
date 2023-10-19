@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace fiiCrawlerApi.Controllers
 {
     [Route("v1/autenticacao")]
-    public class AuthController : Controller
+    public class AutenticacaoController : Controller
     {
         /// <summary>
         /// Valida o usuário dentro dos logins do sistema
@@ -23,7 +23,7 @@ namespace fiiCrawlerApi.Controllers
         {
             try
             {
-                var usuario = new Usuario { id = model.id, username = model.username, senha = model.senha, categoria = model.categoria, tipo = model.tipo };
+                var usuario = new Usuario { id = model.id, username = model.username, senha = model.senha, categoria = model.categoria };
                 return new ContentResult
                 {
                     StatusCode = (int)HttpStatusCode.OK,

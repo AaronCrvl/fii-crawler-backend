@@ -8,6 +8,7 @@ namespace fiiCrawlerApi.Controllers
 {
     public class NoticiasController : Controller
     {
+        [HttpGet]
         [Authorize]
         [Route("noticiasDaCarteira")]
         public async Task<ActionResult> getNewsAsync(string[] codigos)

@@ -1,4 +1,5 @@
-﻿using fiiCrawlerApi.Autenticacao.Seguranca;
+﻿using AngleSharp.Common;
+using fiiCrawlerApi.Autenticacao.Seguranca;
 using fiiCrawlerApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -17,15 +20,18 @@ namespace fiiCrawlerApi.Controllers
         /// <summary>
         /// Retornar lista de FII's.        
         /// </summary>
-        [HttpGet]
-        [Authorize]
+        [HttpGet]        
         [Route("listaResumo")]
         //https://localhost:44304/v1/fii/listaResumo        
         public async Task<ActionResult> BuscarListaResumidaFundosInvestimento()
         {
             try
             {              
-                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                object config = ConfigurationManager.GetSection("Enviroment");
+
+                // prevenir chamadas de origens externas além da aplicação visto que o método
+                // estará disponível na API e não terá autorização sobre o mesmo.
+                HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", config.ToDictionary()["Dev"].ToString());
                 HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET");
 
                 var cache = new fiiCrawlerApi.Cache.GerenciadorDeCache();
