@@ -41,12 +41,11 @@ namespace fiiCrawlerApi.DbContexts
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
 
-        public async Task<Models.Usuario> GetUsuario(string? id, string? username)
+        public async Task<Models.Usuario> GetUsuario(int? id, string username)
         {
             try
             {
@@ -61,7 +60,7 @@ namespace fiiCrawlerApi.DbContexts
                 Usuario usuario;
                 usuario = usuarioDb == null ?
                     new Models.Usuario { id = 0, username = "", senha = "", }
-                    : new Models.Usuario { id = usuarioDb.id, username = usuarioDb.username, senha = usuarioDb.senha, categoria = usuarioDb.categoria, tipo = usuarioDb.tipo };
+                    : new Models.Usuario { id = usuarioDb.id, username = usuarioDb.username, senha = usuarioDb.senha, categoria = usuarioDb.categoria };
 
                 return usuario;
             }
@@ -78,7 +77,7 @@ namespace fiiCrawlerApi.DbContexts
                 await using (var connection = new SqlConnection(this.connectionString))
                 {
                     await connection.ExecuteAsync("UPDATE [Usuario] SET [Username]=@username, [Senha]=@senha, [Categoria]=@categoria, [Tipo]=@tipo, WHERE [Id]=@id",
-                        new { id = usuario.id, username = usuario.username, senha = usuario.senha, Categoria = usuario.categoria, tipo = usuario.tipo });
+                        new { id = usuario.id, username = usuario.username, senha = usuario.senha, Categoria = usuario.categoria });
                 }
 
                 return true;
