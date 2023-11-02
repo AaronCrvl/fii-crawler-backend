@@ -1,5 +1,15 @@
 # 📈fiiCrawlerAPI 
 
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=bugs)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=AaronCrvl_fii-crawler-backend&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=AaronCrvl_fii-crawler-backend)
+
 Este projeto é uma api Asp Net Core feito para suportar uma [aplicação front end em React Js](https://github.com/AaronCrvl/fii-crawler-web). 
 
 Neste projeto trabalho conceitos como o padrão a transmissão de informações entre aplicações via api, o conjunto de restrições de arquitetura REST, o framework Puppeteer, utilizado para trabalhar com web sraping e web crawling e o gerenciamento de tarefas em background da aplicação através do framwework Quartz.NET.
