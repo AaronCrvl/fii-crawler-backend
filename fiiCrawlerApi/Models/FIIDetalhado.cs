@@ -16,28 +16,28 @@ namespace fiiCrawlerApi.Models
         public List<Dividendo> historicoDividendos;
         public Administrador administrador;
     }
-}
-
-public class Dividendo
-{
-    public string dataBase;
-    public string dataPagamento;
-    public string cotacaoBase;
-    public string dividendoYeild;
-    public string rendimento;
-}
-
-public class Administrador
-{
-    public string razaoSocial;
-    public string cnpj;
-    public string email;
-    public string telefone;
-    public string site;
-    public string nomeNoPregao;
-    public string numeroDeCotas;
-    public string patrimonio;
-    public string segmento;
-    public string tipoGestao;
-    public string publicoAlvo;
+        
+    public class Dividendo
+    {
+        public string dataBase;
+        public string dataPagamento;
+        public string cotacaoBase;
+        public string dividendoYeild;
+        public string rendimento;
+    }
+    
+    public class Administrador
+    {
+        public string razaoSocial;
+        public string cnpj;
+        public string email;
+        public string telefone;
+        public string site;
+        public string nomeNoPregao;
+        public string numeroDeCotas;
+        public string patrimonio;
+        public string segmento;
+        public string tipoGestao;
+        public string publicoAlvo;
+    }
 }
